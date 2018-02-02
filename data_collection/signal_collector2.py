@@ -1,28 +1,48 @@
+'''
+Signal Collector 2
+Simpler attempt to disply data using matplotlib
+'''
+
+
 import pandas as pd
 import numpy  as np
-import matplotlib.pyplot as plt
+
 import serial
 from timeit import default_timer as timer
 from tkinter import *
 import csv
 import datetime
+
 import matplotlib
+matplotlib.use("TkAgg")
+import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-matplotlib.use("TkAgg")
+
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 from matplotlib.figure import Figure
 
 COM_PORT = 'COM3'   # COM port for communication with Arduino
 SAMPLE_TIME = 5     # sample time in seconds
 BAUD = 9600
-MAX_DATA_LENGTH = 100
+MAX_DATA_LENGTH = 500
 
 f = Figure(figsize=(5,4), dpi=100)
 a = f.add_subplot(111)
 a.set_yticks(np.arange(0, 1024, 200))
 
 signal = []
+
+
+# Save data to csv function
+def save_data_csv(data):
+    # Save data to csv file
+        with open('data' + datetime.datetime.now().strftime("%B%d%I%M%S") +\
+                  '.csv', 'w') as file:
+            wr = csv.writer(file)
+            wr.writerow(data)
+
+#TODO: Implement saving to database
 
 class Gui:
     def __init__(self, master):
@@ -54,9 +74,9 @@ class Gui:
             self.ser = serial.Serial(port=COM_PORT, baudrate=BAUD)
             self.connected = True
         except serial.SerialException as e:
-            print('Troule opening serial port\n' + str(e))
+            print('Trouble opening serial port\n' + str(e))
 
-        #ani = animation.FuncAnimation(f, self.animate, interval=1)
+        ani = animation.FuncAnimation(f, self.animate, interval=1)
 
         master.mainloop()
 
@@ -72,7 +92,7 @@ class Gui:
 
             # Collect data for specified number of time
             while current - start < SAMPLE_TIME:
-                point = self.ser.readline().strip()
+                point = int(self.ser.readline().strip())
                 saved_data.append(point)
                 #point = self.data[-1]
                 #saved_data.append(point)
@@ -81,29 +101,34 @@ class Gui:
 
             print('Saving data')
 
-            # Save data to csv file
-            with open('data' + datetime.datetime.now().strftime("%B%d%I%M%S") +\
-                      '.csv', 'w') as file:
-                wr = csv.writer(file)
-                wr.writerow(saved_data)
+            save_data_csv(saved_data)
+            
 
             plt.plot(saved_data)
             plt.show()
 
     def animate(self,i):
         if self.connected:
-            point = self.ser.read()
-            self.data.append(point)
-            self.data_count += 1
-            print(point)
 
-            if len(self.data) > MAX_DATA_LENGTH:
-                self.data.pop(0)
-            if self.data_count > 100:
+            # Read all data from serial
+            new_data = self.ser.read(100).strip().split('\r\n')
+
+            if new_data:
+                #Convert to integer
+                new_data = [int(d) for d in new_data]
+
+                #Append data to displayed data
+                self.data += new_data
+
+                if len(self.data) > MAX_DATA_LENGTH:
+                    self.data = self.data[-MAX_DATA_LENGTH:]
+
+                # Clear plot and plot new data
                 a.clear()
                 a.plot(self.data)
-                a.set_yticks(np.arange(0, 1024, 200))
-                self.data_count = 0
+
+
+
 
 my_gui = Gui(Tk())
 
