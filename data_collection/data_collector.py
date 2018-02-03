@@ -24,14 +24,19 @@ from matplotlib.figure import Figure
 from matplotlib.patches import Circle
 
 COM_PORT = 'COM3'   # COM port for communication with Arduino
-SAMPLE_TIME = 5     # sample time in seconds
-BAUD = 9600
-MAX_DATA_LENGTH = 500
-C_LOC_SCALE = 0.1
-DATABASE_NAME = 'testing_data.db'
-TABLE_NAME = 'StressData'
+SAMP_FREQ = 250
+SAMPLE_TIME = 3     # sample time in seconds
+NUM_SAMPS = SAMPLE_TIME * SAMP_FREQ # precalculate number of samples needed
+BAUD = 19200
+MAX_DATA_LENGTH = 1000   # Length of data displayed on graph
+C_LOC_SCALE = 0.1       # Scale for recording indicator positioning
+                        # Icon will appear 10% in from top right corner
+
+DATABASE_NAME = 'testing_data.db'       
+TABLE_NAME = 'StressData'               
 COLUMN_NAMES = '(id VARCHAR, state VARCHAR, data VARCHAR, datetime VARCHAR)'
 
+# Should probably be in GUI class....
 f = Figure(figsize=(5,4), dpi=100)
 a = f.add_subplot(111)
 a.set_yticks(np.arange(0, 1024, 200))
@@ -49,8 +54,13 @@ def save_data_csv(data):
 class Gui:
     def __init__(self, master):
         self.master = master
-        master.title("Data Collection")
 
+        # Set title and icon
+        master.title("Data Collection")
+        try:
+            master.iconbitmap('bingicon.ico')
+        except Exception as e:
+            print('Icon could not be found')
 
         # Used to label data when saving to database
         self.dat_type = StringVar(value='Base')
@@ -110,8 +120,6 @@ class Gui:
         self.table = self.connect_database(DATABASE_NAME)
         self.cursor = self.table.cursor()
             
-            
-
         master.mainloop()
 
     # Connect to database function
@@ -170,21 +178,25 @@ class Gui:
         if self.connected and self.on:
 
             # Read all data from serial
-            new_data = self.ser.read(100).strip().split('\r\n')
+            new_data = self.ser.read(250).strip().split('\r\n')
 
             if new_data:
-                #Convert to integer
+                # Convert to integer
                 new_data = [int(d) for d in new_data]
 
-                #Append data to displayed data
+                # Append data to displayed data
                 self.data += new_data
-
+                
+                # Remove old data
                 if len(self.data) > MAX_DATA_LENGTH:
                     self.data = self.data[-MAX_DATA_LENGTH:]
 
                 # Clear plot and plot new data
+##                time1 = timer()
                 a.clear()
                 a.plot(self.data)
+##                time2=timer()
+##                print('Time to plot: ' + str(time2 - time1))
 
                 # Save data to list if button is pressed
                 if self.collect:
@@ -197,8 +209,10 @@ class Gui:
                         self.saved_data = []
                         
                     # Collect for certain amount of time
-                    if self.current_time - self.start_time < SAMPLE_TIME:
+                    #if self.current_time - self.start_time < SAMPLE_TIME:
+                    if len(self.saved_data) < NUM_SAMPS:
                         self.saved_data += new_data
+                        print('Saved data length: ' + str(len(self.saved_data)))
                         self.current_time = timer()
 
                         # Add recording circle
@@ -213,12 +227,13 @@ class Gui:
                     else:
                         self.collect = False
                         print('Saving Data')
+                        print(len(self.saved_data))
                         save_data_csv(self.saved_data)
                         # Get values from GUI
                         idee = self.subject_entry.get()
-                        state = self.dat_type.get()
-                        
+                        state = self.dat_type.get() 
                         self.save_to_database(idee, state, self.saved_data)
+                        print('Done')
                         
 #def run():
 #    my_gui = Gui(Tk())
