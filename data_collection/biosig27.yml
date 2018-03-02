@@ -1,0 +1,44 @@
+name: biosig27
+channels:
+- anaconda-fusion
+- defaults
+dependencies:
+- certifi=2017.7.27.1=py27hf761292_0
+- pip=9.0.1=py27hdaa76b4_4
+- python=2.7.14=h8c3f1cb_23
+- setuptools=36.5.0=py27ha483b79_0
+- vc=9=h7299396_1
+- vs2008_runtime=9.00.30729.1=hfaea7d5_1
+- wheel=0.29.0=py27hffb40b6_1
+- wincertstore=0.2=py27hf04cefb_0
+- pip:
+  - appdirs==1.4.3
+  - backports.functools-lru-cache==1.4
+  - cffi==1.11.2
+  - colorama==0.3.9
+  - cycler==0.10.0
+  - decorator==4.1.2
+  - future==0.16.0
+  - iso8601==0.1.12
+  - matplotlib==2.1.0
+  - numpy==1.13.3
+  - olefile==0.44
+  - pandas==0.21.0
+  - pillow==4.3.0
+  - py==1.4.34
+  - pycparser==2.18
+  - pyopencl==2017.2+cl21
+  - pyparsing==2.2.0
+  - pyrqa==0.1.0
+  - pyserial==3.4
+  - pytest==3.2.3
+  - python-dateutil==2.6.1
+  - pytools==2017.6
+  - pytz==2017.3
+  - pyyaml==3.12
+  - sampen==0.0.15
+  - scipy==1.0.0
+  - six==1.11.0
+  - tqdm==4.19.4
+prefix: C:\Users\Cody\Anaconda3\envs\biosig27
+

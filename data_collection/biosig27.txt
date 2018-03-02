@@ -1,0 +1,12 @@
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: win-64
+@EXPLICIT
+https://repo.continuum.io/pkgs/main/win-64/certifi-2017.7.27.1-py27hf761292_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/pip-9.0.1-py27hdaa76b4_4.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/python-2.7.14-h8c3f1cb_23.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/setuptools-36.5.0-py27ha483b79_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/vc-9-h7299396_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/vs2008_runtime-9.00.30729.1-hfaea7d5_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/wheel-0.29.0-py27hffb40b6_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/wincertstore-0.2-py27hf04cefb_0.tar.bz2

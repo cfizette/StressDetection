@@ -23,9 +23,9 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 from matplotlib.figure import Figure
 from matplotlib.patches import Circle
 
-COM_PORT = 'COM3'   # COM port for communication with Arduino
+COM_PORT = 'COM9'   # COM port for communication with Arduino
 SAMP_FREQ = 250
-SAMPLE_TIME = 3     # sample time in seconds
+SAMPLE_TIME = 30     # sample time in seconds
 NUM_SAMPS = SAMPLE_TIME * SAMP_FREQ # precalculate number of samples needed
 BAUD = 19200
 MAX_DATA_LENGTH = 1000   # Length of data displayed on graph
@@ -47,7 +47,7 @@ def save_data_csv(data):
         with open('data' + datetime.datetime.now().strftime("%B%d%I%M%S") +\
                   '.csv', 'w') as file:
             wr = csv.writer(file)
-            wr.writerow(data)
+            wr.writerows(zip(data))
 
 #TODO: Implement saving to database
 
