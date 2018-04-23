@@ -32,7 +32,7 @@ MAX_DATA_LENGTH = 1000   # Length of data displayed on graph
 C_LOC_SCALE = 0.1       # Scale for recording indicator positioning
                         # Icon will appear 10% in from top right corner
 
-DATABASE_NAME = 'testing_data.db'       
+DATABASE_NAME = 'test_test.db'       
 TABLE_NAME = 'StressData'               
 COLUMN_NAMES = '(id VARCHAR, state VARCHAR, data VARCHAR, datetime VARCHAR)'
 
@@ -177,8 +177,12 @@ class Gui:
     def animate(self,i):
         if self.connected and self.on:
 
-            # Read all data from serial
-            new_data = self.ser.read(250).strip().split('\r\n')
+            # Read and decode data from serial
+            new_data = self.ser.read(250)
+            new_data = new_data.strip()
+##            print(new_data)
+            new_data = new_data.decode('utf-8')
+            new_data = new_data.split('\r\n')
 
             if new_data:
                 # Convert to integer
