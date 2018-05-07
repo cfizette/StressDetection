@@ -31,7 +31,7 @@ from excel_writer import XlWriter
 COM_PORT = 'COM9'                           # COM port for communication with Arduino
 SAMP_FREQ = 250
 #TODO: MAKE SURE THIS IS SET CORRECTLY!!!!
-SAMPLE_TIME = 5                             # Sample time in seconds
+SAMPLE_TIME = 30                             # Sample time in seconds
 NUM_SAMPS = SAMPLE_TIME * SAMP_FREQ         # Pre-calculate number of samples needed
 BAUD = 19200
 MAX_DATA_LENGTH = 1000                      # Length of data displayed on graph
@@ -243,6 +243,7 @@ class Gui:
             filename (string): Path to file.
         """
         self.writer = XlWriter(filename)
+        print(self.writer)
 
     def update_var_display(self):
         """Update the HR and DFA values displayed"""

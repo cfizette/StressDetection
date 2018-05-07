@@ -1,11 +1,13 @@
 from openpyxl import Workbook, load_workbook
 from openpyxl.utils import get_column_letter
 import datetime
+from datetime import datetime as dt
 
 
 DATA_SHEET = 'Data'
+DATE_SHEET = 'Setup'
 ENGINE = 'xlsxwriter'
-START_DATE_LOC = 'A3'
+START_DATE_LOC = 'D7'
 START_ROW = 3
 
 
@@ -35,10 +37,14 @@ class XlWriter:
         print(type(self.wb))
 
         # Load worksheet
+        
         self.ws = self.wb.get_sheet_by_name(DATA_SHEET)
+        self.date_ws = self.wb.get_sheet_by_name(DATE_SHEET)
 
         # Get start date
-        self.start_date = self.ws[START_DATE_LOC].value.date()
+        self.start_date = self.date_ws[START_DATE_LOC].value.date()
+        print(self.start_date)
+        #self.start_date = dt.strptime(self.ws[START_DATE_LOC].value, '%m/%d/%Y').date()
 
 
     def row_to_index(self, row):
